@@ -3,4 +3,5 @@ requests
 openai
 pandas
 ta
-yfinance 
+yfinance
+gunicorn
