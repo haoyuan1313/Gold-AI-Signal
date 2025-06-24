@@ -156,22 +156,6 @@ Market Data:
     analysis = chat_response.choices[0].message.content.strip()
     return jsonify({"analysis": analysis})
 
-# @app.route('/price')
-# def price():
-#     url = "https://www.goldapi.io/api/XAU/USD"
-#     headers = {"x-access-token": GOLDAPI_KEY}
-#     response = requests.get(url, headers=headers)
-#     try:
-#         data = response.json()
-#         price = data.get('price')
-#         volume = data.get('volume', 'N/A')
-#         if price is not None:
-#             return jsonify({"price": price, "volume": volume})
-#         else:
-#             return jsonify({"error": "No price in response", "raw": data})
-#     except Exception as e:
-#         return jsonify({"error": "Failed to fetch price/volume", "details": str(e), "raw": response.text})
-
 @app.route('/signal', methods=['POST'])
 def signal():
     # Get analysis and price from frontend (require price)
