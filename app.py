@@ -5,18 +5,21 @@ from ta.momentum import RSIIndicator
 from ta.trend import MACD
 from flask import Flask, jsonify, render_template_string, render_template, request
 import yfinance as yf
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 
 RAPIDAPI_HOST = "trend-and-strength-api-for-forex-gold-xauusd.p.rapidapi.com"
-RAPIDAPI_KEY = "7269822340msh5c78026b319e7d1p1daca5jsn8daf44b56dbc"
-OPENAI_API_KEY = "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"
-ALPHA_VANTAGE_API_KEY = "5993OYS7TG4MFTVZ"
-TWELVE_DATA_API_KEY = "e48e1ec5691e4018a17f445c1b4df45d"
-MARKETSTACK_API_KEY = "ab8bb3169380914f49eac78b23eceace"
-GOLDAPI_KEY = "goldapi-rrw1kmc9xftxz-io"
-NINJA_API_KEY = "l/DM4jZ+8EODjH6vUX0mjw==1B0cHdtnazTFnGJ1"
-METALPRICE_API_KEY = "a6e2126355ccf82074104572997fed1c"
+RAPIDAPI_KEY = os.environ.get("RAPIDAPI_KEY")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+ALPHA_VANTAGE_API_KEY = os.environ.get("ALPHA_VANTAGE_API_KEY")
+TWELVE_DATA_API_KEY = os.environ.get("TWELVE_DATA_API_KEY")
+MARKETSTACK_API_KEY = os.environ.get("MARKETSTACK_API_KEY")
+GOLDAPI_KEY = os.environ.get("GOLDAPI_KEY")
+NINJA_API_KEY = os.environ.get("NINJA_API_KEY")
+METALPRICE_API_KEY = os.environ.get("METALPRICE_API_KEY")
 
 @app.route('/')
 def index():
@@ -152,30 +155,33 @@ Market Data:
     analysis = chat_response.choices[0].message.content.strip()
     return jsonify({"analysis": analysis})
 
-@app.route('/price')
-def price():
-    url = "https://www.goldapi.io/api/XAU/USD"
-    headers = {"x-access-token": GOLDAPI_KEY}
-    response = requests.get(url, headers=headers)
-    try:
-        data = response.json()
-        price = data.get('price')
-        volume = data.get('volume', 'N/A')
-        if price is not None:
-            return jsonify({"price": price, "volume": volume})
-        else:
-            return jsonify({"error": "No price in response", "raw": data})
-    except Exception as e:
-        return jsonify({"error": "Failed to fetch price/volume", "details": str(e), "raw": response.text})
+# @app.route('/price')
+# def price():
+#     url = "https://www.goldapi.io/api/XAU/USD"
+#     headers = {"x-access-token": GOLDAPI_KEY}
+#     response = requests.get(url, headers=headers)
+#     try:
+#         data = response.json()
+#         price = data.get('price')
+#         volume = data.get('volume', 'N/A')
+#         if price is not None:
+#             return jsonify({"price": price, "volume": volume})
+#         else:
+#             return jsonify({"error": "No price in response", "raw": data})
+#     except Exception as e:
+#         return jsonify({"error": "Failed to fetch price/volume", "details": str(e), "raw": response.text})
 
 @app.route('/signal', methods=['POST'])
 def signal():
-    # Get analysis and price from frontend if provided
+    # Get analysis and price from frontend (require price)
     analysis_from_user = ''
     price_from_user = None
     if request.is_json:
         analysis_from_user = request.json.get('analysis', '')
         price_from_user = request.json.get('price')
+
+    if not price_from_user:
+        return jsonify({"signal": "No price provided. Please update the latest price first."})
 
     # Fetch 1h interval, 2 days of price data from yfinance
     try:
@@ -194,21 +200,6 @@ def signal():
             )
     except Exception as e:
         price_summary = f"Failed to fetch historical price data: {e}"
-
-    # Fetch live price and volume from GoldAPI
-    url = "https://www.goldapi.io/api/XAU/USD"
-    headers = {"x-access-token": GOLDAPI_KEY}
-    response = requests.get(url, headers=headers)
-    try:
-        data = response.json()
-        price = data.get('price')
-        volume = data.get('volume', 'N/A')
-        if price_from_user:
-            price = price_from_user
-        if price is None:
-            return jsonify({"signal": "No price from GoldAPI or frontend."})
-    except Exception as e:
-        return jsonify({"signal": f"Failed to fetch price/volume: {e}"})
 
     # Calculate indicators using yfinance as fallback (for historical data)
     try:
@@ -237,7 +228,15 @@ def signal():
 
     # Prepare prompt for ChatGPT
     prompt = f"""
-You are a professional forex trading assistant. Based on the following live gold price (XAU/USD), volume, technical indicators (RSI, MACD), the latest news headlines and sentiment, and the following analysis, generate a trading signal for the next 1-4 hours.
+You are a professional forex trading assistant. Based on the following live gold price (XAU/USD), volume, technical indicators (RSI, MACD), the latest news headlines and sentiment, and the following analysis, make a real trading decision for the next 1-4 hours. 
+
+You must decide whether to:
+- Buy (with a suggested entry price if appropriate)
+- Sell (with a suggested entry price if appropriate)
+- Wait (if there is no good trade opportunity now)
+- Or suggest the best price/condition to enter a trade if the current price is not ideal.
+
+Do not always recommend a trade if the market is not favorable. Be clear and explain your reasoning.
 
 1h Interval Price Data (last 2 days):
 {price_summary}
@@ -248,14 +247,14 @@ Analysis:
 Please provide your answer in the following format, and ensure that the Take Profit (TP) and Stop Loss (SL) are set with a risk-reward ratio of 1:1.5:
 
 Details and Explain why:
-Buy/Sell:
-Entry Price:
+Buy/Sell/Wait:
+Entry Price (if trading):
 TP:
 SL:
 
 Latest Market Data (1m):
-Price: {price}
-Volume: {volume}
+Price: {price_from_user}
+Volume: N/A
 RSI: {rsi}
 MACD: {macd}
 MACD Signal: {macd_signal}

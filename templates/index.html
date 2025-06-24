@@ -224,28 +224,28 @@
         document.getElementById('news-container').innerHTML = '<p>Failed to load news.</p>';
       });
 
-    function updateLivePrice() {
-      fetch('/price')
-        .then(response => response.json())
-        .then(data => {
-          if (data.price) {
-            let volumeText = '';
-            if (data.volume && data.volume !== 'N/A') {
-              volumeText = ` | Volume: ${data.volume}`;
-            }
-            document.getElementById('live-price').innerHTML = `Live Price: $${data.price}${volumeText}`;
-          } else if (data.error) {
-            document.getElementById('live-price').innerHTML = 'Failed to load live price: ' + (data.error || '');
-          } else {
-            document.getElementById('live-price').innerHTML = 'Failed to load live price.';
-          }
-        })
-        .catch(() => {
-          document.getElementById('live-price').innerHTML = 'Failed to load live price.';
-        });
-    }
-    updateLivePrice();
-    setInterval(updateLivePrice, 1000);
+    // function updateLivePrice() {
+    //   fetch('/price')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       if (data.price) {
+    //         let volumeText = '';
+    //         if (data.volume && data.volume !== 'N/A') {
+    //           volumeText = ` | Volume: ${data.volume}`;
+    //         }
+    //         document.getElementById('live-price').innerHTML = `Live Price: $${data.price}${volumeText}`;
+    //       } else if (data.error) {
+    //         document.getElementById('live-price').innerHTML = 'Failed to load live price: ' + (data.error || '');
+    //       } else {
+    //         document.getElementById('live-price').innerHTML = 'Failed to load live price.';
+    //       }
+    //     })
+    //     .catch(() => {
+    //       document.getElementById('live-price').innerHTML = 'Failed to load live price.';
+    //     });
+    // }
+    // updateLivePrice();
+    // setInterval(updateLivePrice, 1000);
     </script>
 </body>
 </html>
