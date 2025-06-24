@@ -7,11 +7,12 @@ from flask import Flask, jsonify, render_template_string, render_template, reque
 import yfinance as yf
 import os
 
+
 app = Flask(__name__)
 
 RAPIDAPI_HOST = "trend-and-strength-api-for-forex-gold-xauusd.p.rapidapi.com"
 RAPIDAPI_KEY = "7269822340msh5c78026b319e7d1p1daca5jsn8daf44b56dbc"
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 ALPHA_VANTAGE_API_KEY = "5993OYS7TG4MFTVZ"
 TWELVE_DATA_API_KEY = "e48e1ec5691e4018a17f445c1b4df45d"
 MARKETSTACK_API_KEY = "ab8bb3169380914f49eac78b23eceace"
