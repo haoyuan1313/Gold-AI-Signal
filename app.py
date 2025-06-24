@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 RAPIDAPI_HOST = "trend-and-strength-api-for-forex-gold-xauusd.p.rapidapi.com"
 RAPIDAPI_KEY = "7269822340msh5c78026b319e7d1p1daca5jsn8daf44b56dbc"
-OPENAI_API_KEY = "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"
+# OPENAI_API_KEY = "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"
 ALPHA_VANTAGE_API_KEY = "5993OYS7TG4MFTVZ"
 TWELVE_DATA_API_KEY = "e48e1ec5691e4018a17f445c1b4df45d"
 MARKETSTACK_API_KEY = "ab8bb3169380914f49eac78b23eceace"
