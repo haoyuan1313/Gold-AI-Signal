@@ -12,15 +12,15 @@ load_dotenv()
 app = Flask(__name__)
 
 RAPIDAPI_HOST = "trend-and-strength-api-for-forex-gold-xauusd.p.rapidapi.com"
-RAPIDAPI_KEY = os.environ.get("RAPIDAPI_KEY")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-ALPHA_VANTAGE_API_KEY = os.environ.get("ALPHA_VANTAGE_API_KEY")
-TWELVE_DATA_API_KEY = os.environ.get("TWELVE_DATA_API_KEY")
-MARKETSTACK_API_KEY = os.environ.get("MARKETSTACK_API_KEY")
-GOLDAPI_KEY = os.environ.get("GOLDAPI_KEY")
-NINJA_API_KEY = os.environ.get("NINJA_API_KEY")
-METALPRICE_API_KEY = os.environ.get("METALPRICE_API_KEY")
-FOREXNEWSAPI_KEY = os.environ.get("FOREXNEWSAPI_KEY")
+RAPIDAPI_KEY = "7269822340msh5c78026b319e7d1p1daca5jsn8daf44b56dbc"
+OPENAI_API_KEY = "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"
+ALPHA_VANTAGE_API_KEY = "5993OYS7TG4MFTVZ"
+TWELVE_DATA_API_KEY = "e48e1ec5691e4018a17f445c1b4df45d"
+MARKETSTACK_API_KEY = "ab8bb3169380914f49eac78b23eceace"
+GOLDAPI_KEY = "goldapi-rrw1kmc9xftxz-io"
+NINJA_API_KEY = "l/DM4jZ+8EODjH6vUX0mjw==1B0cHdtnazTFnGJ1"
+METALPRICE_API_KEY = "a6e2126355ccf82074104572997fed1c"
+FOREXNEWSAPI_KEY = "sudnqb1v1umdmofcxrl65hoo9aenezqqawz0nx7a"
 
 @app.route('/')
 def index():
