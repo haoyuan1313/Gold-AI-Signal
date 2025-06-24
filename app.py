@@ -20,6 +20,7 @@ MARKETSTACK_API_KEY = os.environ.get("MARKETSTACK_API_KEY")
 GOLDAPI_KEY = os.environ.get("GOLDAPI_KEY")
 NINJA_API_KEY = os.environ.get("NINJA_API_KEY")
 METALPRICE_API_KEY = os.environ.get("METALPRICE_API_KEY")
+FOREXNEWSAPI_KEY = os.environ.get("FOREXNEWSAPI_KEY")
 
 @app.route('/')
 def index():
@@ -81,7 +82,7 @@ def gold_news():
         "currencypair": "XAU-USD",
         "items": 3,
         "page": 1,
-        "token": "sudnqb1v1umdmofcxrl65hoo9aenezqqawz0nx7a"
+        "token": FOREXNEWSAPI_KEY
     }
     response = requests.get(url, params=params)
     return jsonify(response.json())
@@ -126,7 +127,7 @@ def analyze():
         "currencypair": "XAU-USD",
         "items": 3,
         "page": 1,
-        "token": "sudnqb1v1umdmofcxrl65hoo9aenezqqawz0nx7a"
+        "token": FOREXNEWSAPI_KEY
     }
     news_response = requests.get(news_url, params=news_params)
     news_data = news_response.json().get('data', [])
@@ -221,7 +222,7 @@ def signal():
         "currencypair": "XAU-USD",
         "items": 3,
         "page": 1,
-        "token": "sudnqb1v1umdmofcxrl65hoo9aenezqqawz0nx7a"
+        "token": FOREXNEWSAPI_KEY
     }
     news_response = requests.get(news_url, params=news_params)
     news_data = news_response.json().get('data', [])
