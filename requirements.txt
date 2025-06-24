@@ -1,0 +1,6 @@
+Flask
+requests
+openai
+pandas
+ta
+yfinance 
