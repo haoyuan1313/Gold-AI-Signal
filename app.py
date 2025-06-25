@@ -147,7 +147,7 @@ Market Data:
     for news in news_data:
         prompt += f"- {news.get('title', '')} (Sentiment: {news.get('sentiment', 'N/A')})\n"
 
-    openai.api_key = OPENAI_API_KEY
+    openai.api_key = os.environ.get("OPENAI_API_KEY")
     chat_response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
@@ -248,7 +248,7 @@ Latest News:
     for news in news_data:
         prompt += f"- {news.get('title', '')} (Sentiment: {news.get('sentiment', 'N/A')})\n"
 
-    openai.api_key = OPENAI_API_KEY
+    openai.api_key = os.environ.get("OPENAI_API_KEY")
     chat_response = openai.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}]
