@@ -6,7 +6,11 @@ from ta.trend import MACD
 from flask import Flask, jsonify, render_template_string, render_template, request
 import yfinance as yf
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+print("Loaded OPENAI_API_KEY:", os.environ.get("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 
